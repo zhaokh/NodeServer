@@ -26,4 +26,10 @@ cnpm install safer-buffer
 才可以正常运行
 讲解url：http://www.runoob.com/nodejs/nodejs-express-framework.html
 
-
+文件上传，需要安装依赖包：
+cnpm install busboy
+cnpm install xtend
+cnpm install append-field
+cnpm install object-assign
+cnpm install mkdirp
+cnpm install concat-stream
