@@ -33,3 +33,12 @@ cnpm install append-field
 cnpm install object-assign
 cnpm install mkdirp
 cnpm install concat-stream
+
+launch.json中添加配置，输入冒号：则会有提示！！！
+使用 nodemon，可以实现热启动，不用每次修改server.js都手动启动服务器！并且可以调试服务器端代码！
+安装方法：
+cnpm install nodemon
+然后用nodemon server命令启动项目，不用node server启动
+配置调试服务器端代码：
+打开launsh.json配置文件，然后在[]中输入冒号，则提示选择nodemon，则会自动生成参数，修改program中的app.js为自己的server.js
+调试面板中，选择为nodemon，不要选择启动程序（这个是开发nodejs程序时的调试）。按F5即可启动。然后在浏览器端访问即可调试!!
