@@ -14,3 +14,16 @@ multer - node.js 中间件，用于处理 enctype="multipart/form-data"（设置
 $ cnpm install body-parser --save
 $ cnpm install cookie-parser --save
 $ cnpm install multer --save
+
+express_demo运行之前一直报错，运行了以下命令：
+cnpm install inherits
+cnpm install negotiator
+cnpm install mime-types
+cnpm install media-typer
+cnpm install bytes
+cnpm install raw-body
+cnpm install safer-buffer
+才可以正常运行
+讲解url：http://www.runoob.com/nodejs/nodejs-express-framework.html
+
+
