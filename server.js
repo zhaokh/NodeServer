@@ -11,10 +11,14 @@ app.get('/index.html', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
 
+
+function dbCallback(items){
+   console.log(items.length);
+}
+
 function login(req, res){
    var first_name = req.body.first_name,
-       password = req.body.last_name;
-   res.end("Server get");
+       user_password = req.body.last_name;
 
    var mysql      = require('mysql');
    var connection = mysql.createConnection({
@@ -26,15 +30,65 @@ function login(req, res){
     
    connection.connect();
 
+   res.write('<head><meta charset = "utf-8"></head>')
+
    connection.query('SELECT password from users where idusers = "' + first_name + '"', function (error, results, fields) {
       if (error) throw error;
-      console.log('The solution is: ', results[0]);
-    });
+      backPassword = results[0].password;
+
+      var outString = "";
+      if(user_password != backPassword){
+         res.write("Login Faild" + "\n")
+         res.end();
+      }else{
+         res.write("Login Success" + "\n")
+         console.log(first_name + '登录成功');
+         var MongoClient = require('mongodb').MongoClient;
+         var url = "mongodb://localhost:27017/";
+         MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            res.write("mongodb 数据库已连接!");            
+            
+            var jddb = db.db("JD");
+            var categories = jddb.collection("Categories");
+            var comments = jddb.collection("Comment");
+            
+
+            //var startup = db.db("local").collection("startup_log");
+
+            categories.find({}).toArray(function(err, items){
+               if (err) throw err;
+               if(items instanceof Array){
+                  dbCallback(items);
+               }
+               db.close();
+            });
+
+            res.end();
+         });
+      }
+   });
+
+   connection.end();
 
 }
 
-app.post('/login', urlencodedParser,login);
+
+
+app.post('/login', urlencodedParser, login);
+
+function inquire(req, res){
+   console.log("inquire");
+   var MongoClient = require('mongodb').MongoClient;
+   var url = "mongodb://localhost:27017/JD";
  
+   MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      res.write("mongodb 数据库已创建!");
+      db.close();
+   });
+}
+
 app.post('/process_post', urlencodedParser, function (req, res) {
  
    // 输出 JSON 格式
