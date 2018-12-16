@@ -7,13 +7,69 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
  
 app.use(express.static('public'));
  
-app.get('/index.html', function (req, res) {
+app.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
 
 
-function dbCallback(items){
+function loginCallback(results, res , user_password){
+
+   var backPassword = results[0].password;
+
+   if(user_password != backPassword){
+      res.write("Login Faild" + "\n")
+      res.end();
+   }else{
+      res.write("Login Success");
+      res.write("\n")
+
+      var MongoClient = require('mongodb').MongoClient;
+      var url = "mongodb://localhost:27017/";
+      MongoClient.connect(url, function(err, db){
+         if (err) throw err;
+         mongoConnCallback(db, res);
+      });
+   }
+}
+
+function mongoConnCallback(db, res){        
+   
+   var jddb = db.db("JD");
+   var categories = jddb.collection("Categories");
+   var comments = jddb.collection("Comment");
+   var shops = jddb.collection("Shop");
+
+   //var startup = db.db("local").collection("startup_log");
+   res.end("查询\n");
+
+   comments.estimatedDocumentCount().then((value)=>{
+      console.log(value);//42
+   });
+
+   /*
+   comments.find({}).toArray(function(err, items){
+      if (err) throw err;
+      if(items instanceof Array){
+         console.log("类别总数为：" + items.length);
+      }
+      db.close();
+   });
+
+   comments.find({}).toArray(function(err, items){
+      if (err) throw err;
+      if(items instanceof Array){
+         res.write("评论总数为：" + items.length);
+
+      }
+      db.close();
+   });
+   */
+
+}
+
+function dbCallback(items, res){
    console.log(items.length);
+
 }
 
 function login(req, res){
@@ -32,41 +88,9 @@ function login(req, res){
 
    res.write('<head><meta charset = "utf-8"></head>')
 
-   connection.query('SELECT password from users where idusers = "' + first_name + '"', function (error, results, fields) {
+   connection.query('SELECT password from users where idusers = "' + first_name + '"', function(error, results, fields){
       if (error) throw error;
-      backPassword = results[0].password;
-
-      var outString = "";
-      if(user_password != backPassword){
-         res.write("Login Faild" + "\n")
-         res.end();
-      }else{
-         res.write("Login Success" + "\n")
-         console.log(first_name + '登录成功');
-         var MongoClient = require('mongodb').MongoClient;
-         var url = "mongodb://localhost:27017/";
-         MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            res.write("mongodb 数据库已连接!");            
-            
-            var jddb = db.db("JD");
-            var categories = jddb.collection("Categories");
-            var comments = jddb.collection("Comment");
-            
-
-            //var startup = db.db("local").collection("startup_log");
-
-            categories.find({}).toArray(function(err, items){
-               if (err) throw err;
-               if(items instanceof Array){
-                  dbCallback(items);
-               }
-               db.close();
-            });
-
-            res.end();
-         });
-      }
+      loginCallback(results, res , user_password);
    });
 
    connection.end();
