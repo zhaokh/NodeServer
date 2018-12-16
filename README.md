@@ -34,6 +34,8 @@ cnpm install object-assign
 cnpm install mkdirp
 cnpm install concat-stream
 
+npm install 自动安装所有依赖包!!
+
 launch.json中添加配置，输入冒号：则会有提示！！！
 使用 nodemon，可以实现热启动，不用每次修改server.js都手动启动服务器！并且可以调试服务器端代码！
 安装方法：
@@ -44,3 +46,9 @@ cnpm install nodemon
 调试面板中，选择为nodemon，不要选择启动程序（这个是开发nodejs程序时的调试）。按F5即可启动。然后在浏览器端访问即可调试!!
 
 
+使用 eslint：检查代码风格一致，提升代码质量
+npm install -g eslint
+eslint --init 生成配置文件，定义检查规则
+
+pm2 强大的node部署管理监控工具，可监控代码变化，自动重新部署
+https://blog.csdn.net/maquealone/article/details/79550120
