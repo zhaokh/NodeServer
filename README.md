@@ -52,3 +52,10 @@ eslint --init 生成配置文件，定义检查规则
 
 pm2 强大的node部署管理监控工具，可监控代码变化，自动重新部署
 https://blog.csdn.net/maquealone/article/details/79550120
+
+nodejs 链接mysql错误：
+ER_NOT_SUPPORTED_AUTH_MODE:
+解决方法：登录root，运行以下命令
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345'; 
+FLUSH PRIVILEGES;

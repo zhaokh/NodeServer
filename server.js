@@ -10,6 +10,30 @@ app.use(express.static('public'));
 app.get('/index.html', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
+
+function login(req, res){
+   var first_name = req.body.first_name,
+       password = req.body.last_name;
+   res.end("Server get");
+
+   var mysql      = require('mysql');
+   var connection = mysql.createConnection({
+     host     : 'localhost',
+     user     : 'root',
+     password : '12345',
+     database : 'jdspider'
+   });
+    
+   connection.connect();
+
+   connection.query('SELECT password from users where idusers = "' + first_name + '"', function (error, results, fields) {
+      if (error) throw error;
+      console.log('The solution is: ', results[0]);
+    });
+
+}
+
+app.post('/login', urlencodedParser,login);
  
 app.post('/process_post', urlencodedParser, function (req, res) {
  
