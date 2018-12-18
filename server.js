@@ -8,9 +8,17 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(express.static('public'));
  
 app.get('/', function (req, res) {
+   console.log("htlloe");
    res.sendFile( __dirname + "/" + "index.html" );
 })
 
+app.get('/vue',function(req,res){
+   res.sendFile(__dirname + "/" + 'myvue.html')
+})
+
+app.get('/dist', function (req, res) {
+   res.sendFile( __dirname + "/dist/" + "index.html" );
+})
 
 function loginCallback(results, res , user_password){
 

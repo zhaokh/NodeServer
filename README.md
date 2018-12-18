@@ -59,3 +59,4 @@ ER_NOT_SUPPORTED_AUTH_MODE:
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345'; 
 FLUSH PRIVILEGES;
+
