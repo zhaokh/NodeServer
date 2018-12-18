@@ -4,21 +4,53 @@ var bodyParser = require('body-parser');
  
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
- 
-app.use(express.static('public'));
- 
+
+
+/*
 app.get('/', function (req, res) {
-   console.log("htlloe");
-   res.sendFile( __dirname + "/" + "index.html" );
+   res.sendFile( __dirname + "/dist/" + "index.html" );
+}) // 使用后方路由的情况
+*/
+
+// 使用前方history路由，需要使用中间件，即可
+const history = require('connect-history-api-fallback');
+//这句代码需要在express.static上面
+app.use(history());
+app.use(express.static('dist'));
+
+
+/*
+app.use(history(
+   {
+       htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
+   }
+));
+*/
+
+app.use(express.static('public'));
+
+
+/*
+app.get('/*', function (req, res) {
+   res.sendFile( __dirname + "/" + "vuesroute.html" );
 })
 
 app.get('/vue',function(req,res){
    res.sendFile(__dirname + "/" + 'myvue.html')
 })
 
+app.get('/myvue.js',function(req,res){
+   res.sendFile(__dirname + "/" + 'myvue.js')
+})
+
+app.get('/vuesroute',function(req,res){
+   res.sendFile(__dirname + "/" + "vuesroute.html")
+})
+
 app.get('/dist', function (req, res) {
    res.sendFile( __dirname + "/dist/" + "index.html" );
 })
+*/
 
 function loginCallback(results, res , user_password){
 

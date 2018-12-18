@@ -1,0 +1,57 @@
+<html>
+    <title>nihao</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <body>
+        <div id = "app">
+            {{message}}
+        </div>
+
+        <div id = "app-2">
+            <span v-bind:title = "message">
+                鼠标在此停留
+            </span>
+        </div>
+
+        <div id="app-3">
+                <p v-if="seen">现在你看到我了</p>
+        </div>
+
+        <div id="app-4">
+            <ol>
+                <li v-for="todo in todos">
+                {{ todo.text }}
+                </li>
+            </ol>
+        </div>
+
+        <div id = 'app5'>
+            {{message}}
+            <button v-on:click = "reverseMessage">逆转消息</button>
+        </div>
+
+        <div id = 'app6'>
+            <p>{{message}}</p>
+            <input v-model = "message">
+        </div>
+
+        <div id = 'app7'>
+            <ol>
+                <!-- 创建一个 todo-item 组件的实例 -->
+                <todo-item
+                    v-for = "item in groceryList"
+                    v-bind:todo="item"
+                    v-bind:key="item.id"
+                ></todo-item>
+            </ol>
+        </div>
+
+        <div id = "componentsdemo">
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+        </div>
+
+        <script src = "myvue.js"></script>
+    </body>
+</html>

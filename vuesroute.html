@@ -1,0 +1,38 @@
+<html>
+    <title>简单路由</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <body>
+        <div id = "app">
+ 
+        </div>
+        <a href="/about">About</a>
+        <a href="/">Home</a>
+    </body>
+
+    <script>
+        const NotFound = { template: '<p>Page not found</p>' }
+        const Home = { template: '<p>home page</p> ' }
+        const About = { template: '<p>about page</p>' }
+
+        const routes = {
+        '/': Home,
+        '/about': About
+        }
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                currentRoute: window.location.pathname
+            },
+            computed: {
+                ViewComponent () {
+                    console.log(this.currentRoute)
+                    return routes[this.currentRoute] || NotFound
+                }
+            },
+            render (h) { return h(this.ViewComponent) }
+        })
+    </script>
+
+</html>

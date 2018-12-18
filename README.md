@@ -60,3 +60,6 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345'; 
 FLUSH PRIVILEGES;
 
+vue路由和express路由：是使用 vue 路由来写前端页面跳转，express 来写 api 接口路由
+后端把所有页面（或者特定的几个）跳转到首页，接下来的事其他都交给前端了，前端的路由实际都只是一个页面，也就没了切换的闪动白屏，速度也会更快，与后端交互走 api 就行了
+
