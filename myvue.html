@@ -52,6 +52,91 @@
             <button-counter></button-counter>
         </div>
 
+        <div id = "app9">
+            <alert-box>
+                Something bad happened.
+            </alert-box>
+        </div>
+
+        <div id="root">
+            <child>
+                <div slot="header">上</div>
+                <div slot="footer">下</div>
+            </child>
+        </div>
+
+
+        <div id="demo1">
+            <div>
+                <h3>1、单个插槽</h3>
+                <single>
+                    dsafd
+                </single>
+            </div>
+        
+            <muli-slots>
+                <!--在html中不支持驼峰式的标签名，需改为横线式-->
+                <h3 slot="header">2、多插槽/具名插槽</h3>
+                <p>主要内容的一个段落。</p>
+                <p>另一个主要段落。</p>
+                <p slot="footer">这里有一些联系信息</p>
+            </muli-slots>
+            <!--作用域插槽-->
+            <!--在父级中，具有特殊特性 slot-scope 的 <template> 元素必须存在，表示它是作用域插槽的模板。
+                        slot-scope 的值将被用作一个临时变量名，此变量接收从子组件传递过来的 prop 对象：-->
+            <div class="parent">
+                <h3>3、作用域插槽</h3>
+                <scoped-slot>
+                    <template slot-scope="props">
+                                <!--这里的props指的是子组件的props-->
+                                    <span>this is from parent</span>
+                                    <span>{{props.msg}}</span>
+                    </template>
+                </scoped-slot>
+            </div>
+            <div>
+                <h3>4、使用render代替子组件中的template</h3>
+                <render-slot></render-slot>
+            </div>
+            <div>
+                <h3>5、子组件中同时存在template和render函数</h3>
+                <render-template></render-template>
+            </div>
+            <div>
+                <h3>6、在render函数中使用作用域插槽</h3>
+                <render-scope>
+                    <template slot-scope="props">
+                                        <p>{{props.msg}}</p>
+                                    </template>
+                </render-scope>
+        
+            </div>
+        
+            <!--父组件通过props向子组件传值-->
+            <div class="parent">
+                <h3>7、父组件通过props向子组件传值，值在template的slot标签中接收</h3>
+                <!--传递的值需要写在子组件的标签中-->
+                <child datamsg="传递的值" msg2="第二个值"></child>
+            </div>
+        
+            <div>
+                <h3>8、父组件通过props向子组件传值，值在render函数返回的createElement函数中接收</h3>
+                <child-render msg="render send data">
+                    <template slot-scope="props">
+                                <em>{{props.text}}</em>
+                            </template>
+                </child-render>
+            </div>
+            <div>
+                <h3>9、与8等价的template</h3>
+                <child-render-template msg="template send data">
+                    <template slot-scope="props">
+                                        <em>{{props.text}}</em>
+                                    </template>
+                </child-render-template>
+            </div>
+        </div>
+
         <script src = "myvue.js"></script>
     </body>
 </html>

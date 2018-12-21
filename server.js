@@ -5,18 +5,37 @@ var bodyParser = require('body-parser');
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-
 /*
-app.get('/', function (req, res) {
-   res.sendFile( __dirname + "/dist/" + "index.html" );
-}) // 使用后方路由的情况
+app.get('/slot',function(req,res){
+   res.sendFile(__dirname + "/" + 'zuoyongyuslot.html')
+})
+
+app.get('/vue',function(req,res){
+   res.sendFile(__dirname + "/" + 'myvue.html')
+})
+app.get('/myvue.js',function(req,res){
+   res.sendFile(__dirname + "/" + 'myvue.js')
+})
 */
 
-// 使用前方history路由，需要使用中间件，即可
+/*
+// 使用前方history路由，需要使用中间件，即可访问vue的项目
 const history = require('connect-history-api-fallback');
 //这句代码需要在express.static上面
 app.use(history());
 app.use(express.static('dist'));
+*/
+
+
+
+// 访问index.html,mysql登录，查询mongodb中JD中catalog记录条数
+app.get('/', function (req, res) {
+   res.sendFile( __dirname + "/" + "index.html" );
+})
+app.get('/login', function (req, res) {
+   login(req, res);
+})
+
 
 
 /*
@@ -31,14 +50,7 @@ app.use(express.static('public'));
 
 
 /*
-app.get('/*', function (req, res) {
-   res.sendFile( __dirname + "/" + "vuesroute.html" );
-})
-
-app.get('/vue',function(req,res){
-   res.sendFile(__dirname + "/" + 'myvue.html')
-})
-
+// vue 学习
 app.get('/myvue.js',function(req,res){
    res.sendFile(__dirname + "/" + 'myvue.js')
 })
@@ -47,9 +59,10 @@ app.get('/vuesroute',function(req,res){
    res.sendFile(__dirname + "/" + "vuesroute.html")
 })
 
-app.get('/dist', function (req, res) {
-   res.sendFile( __dirname + "/dist/" + "index.html" );
+app.get('/zuoyongyuslot',function(req,res){
+   res.sendFile(__dirname + "/" + "zuoyongyuslot.html")
 })
+
 */
 
 function loginCallback(results, res , user_password){
@@ -80,10 +93,10 @@ function mongoConnCallback(db, res){
    var shops = jddb.collection("Shop");
 
    //var startup = db.db("local").collection("startup_log");
-   res.end("查询\n");
 
    comments.estimatedDocumentCount().then((value)=>{
       console.log(value);//42
+      res.end("mongodb中记录条数："+value + "\n");
    });
 
    /*

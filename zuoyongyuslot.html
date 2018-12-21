@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-awesome-list :items="items">
+            <!-- "items"是父组件"app"中的data，用属性items接收 -->
+            <!-- slot具名插槽，slot-scope用来接收子组件传来的prop对象 ，这个prop是子组件传来的，即<slot>中的属性数据-->
+            <li slot="chacao" slot-scope="props" class="my-fancy-item">
+                {{ props.text }}
+            </li>
+        </my-awesome-list>
+    </div>
+    <script>
+        Vue.component('my-awesome-list', {
+            template://通过props接收到了"items"，这个items就是Vue实例中data中的items
+                `
+    	    <ul>
+    	        <slot name="chacao"  v-for="item in items" :text="item.text">
+    	        </slot>
+    	    </ul>
+    	`,
+            props: ["items"]//声明组件my-awesome-list的属性items（用来接收父组件的数据）
+        });
+
+        new Vue({
+            el: '#app',
+            data: {
+                items: [
+                    { text: 'Foo' },
+                    { text: 'Bbb' },
+                    { text: 'Bar' }
+                ]
+            }
+        })
+	//数据传递：Vue-data-items通过<:items="items">传递进my-awesome-list子组件，
+	//子组件内用props:["items"]接收到items
+	//在子组件模块中用v-for遍历items,取出每个text存到text属性中
+	//在插槽内通过slot-scope接受组件中的属性数据
+	//props.text取出在模块中的text
+    </script>
+</body>
