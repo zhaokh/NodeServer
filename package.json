@@ -19,5 +19,9 @@
     "finalhandler": "^1.1.1",
     "merge-descriptors": "^1.0.1",
     "multer": "^1.4.1"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "mongoose": "^5.4.0"
   }
 }
