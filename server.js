@@ -8,9 +8,9 @@ var cors = require('cors')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.use(cors({
-   origin:['http://localhost:8080'],
+   origin:['http://localhost:8080/api/*'],
    methods:['GET','POST'],
-   allowHeaders:['Content-type','Authorization']
+   //allowHeaders:['Content-type','Authorization']
 }));
 
 app.use(express.static('dist'));
