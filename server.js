@@ -7,6 +7,18 @@ var cors = require('cors')
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080'); // 允许跨域的请求发起者
+  res.header('Access-Control-Allow-Methods', 'GET,POST');  // 复杂请求，设置允许的方法
+  res.header('Access-Control-Allow-Headers', 'Content-Type');  // 请求的自定义请求头字段
+  res.header('Access-Control-Allow-Credentials','true');  // 是否接受发送cookies
+  next();
+};
+
+app.use(allowCrossDomain);
+
+/*
 //allow custom header and CORS
 app.all('*',function (req, res, next) {
    res.header('Access-Control-Allow-Origin', '*');
@@ -20,12 +32,16 @@ app.all('*',function (req, res, next) {
      next();
    }
  });
- 
+*/
+
+
+/*
 app.use(cors({
    origin:['http://localhost:8080/api/*'],
    methods:['GET','POST'],
    //allowHeaders:['Content-type','Authorization']
 }));
+*/
 
 app.use(express.static('dist'));
 
