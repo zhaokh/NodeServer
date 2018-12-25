@@ -1,14 +1,14 @@
 var mongoose = require('./mongoconfig.js'), // 引入mongodb配置文件
     Schema = mongoose.Schema;
 
-// 构造Schema
+// 类别
 var CategorySchema = new Schema({
     _id:String, //类别码
     name:String, // 种类名称
     url:String // 路径
 },{ collection: 'Categories' });
 
-// 构造Schema
+// 商品
 var ProductScheme = new Schema({
     _id:String, //
     shopId:String, // 
@@ -21,6 +21,7 @@ var ProductScheme = new Schema({
     favourableDesc1:String
 },{ collection: 'Products' });
 
+// 评论
 var CommentSchema = new Schema({
     _id:Number,
     productId:String,
@@ -68,6 +69,7 @@ var CommentSchema = new Schema({
     afterDays:Number
 }, { collection: 'Comment' });
 
+// 图片评论
 var CommentImageScheme = new Schema({
     _id:Number,
     associateId:Number,
@@ -80,7 +82,7 @@ var CommentImageScheme = new Schema({
     isMain:Number
 },{ collection: 'CommentImage' });
 
-
+// 评论概要
 var CommentSummaryScheme = new Schema({
     _id:String,
     goodRateShow:Number,
@@ -115,6 +117,7 @@ var CommentSummaryScheme = new Schema({
     imageListCount:Number
 }, { collection: 'CommentSummary' });
 
+// 热评
 var HotCommentTagScheme = new Schema({
     _id:String,
     name:String,
@@ -128,6 +131,7 @@ var HotCommentTagScheme = new Schema({
     canBeFiltered:Boolean
 }, { collection: 'HotCommentTag' })
 
+// 网店
 var ShopScheme = new Schema({
     _id:String,
     shopId:String,
