@@ -1,49 +1,59 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var sessionParser = require('express-session');
+var MongoStore = require('connect-mongostore')(sessionParser);
  
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+app.use(cookieParser('123456'));
+app.use(sessionParser({
+  secret:'my app secret',// 用来对session id相关的cookie进行签名
+  saveUninitialized:false,// 是否自动保存未初始化的会话，建议false
+  resave:false,// 是否每次都重新保存会话，建议false
+  store: new MongoStore({   //创建新的mongodb数据库存储session
+      host: 'localhost',    //数据库的地址，本机的话就是127.0.0.1，也可以是网络主机
+      port: 27017,          //数据库的端口号
+      db: 'test-app'        //数据库的名称。
+  }),
+  name:'test',//cookie的name，默认值是：connect.sid
+  cookie:{
+      maxAge:10*1000
+  }
+}));
+
 // 访问index.html,mysql登录，查询mongodb中JD中catalog记录条数
-app.get('/', function (req, res) {
+app.get('/', function (req, res) {  
+   console.log("index页面get请求request的cookies：");
+   console.log(req.cookies);
    res.sendFile( __dirname + "/" + "index.html" );
 })
 app.post('/login', urlencodedParser,function (req, res) {
+  console.log("index页面登录请求post的request的cookies：");
+  console.log(req.cookies);
+  console.log(req.signedCookies); 
+  console.log(req.session.id);
+  res.cookie('sessionid',req.sessionID); 
+  req.session.save();
    login(req, res);
 })
 
+app.get("/set",function(req,res){
+  //参数1：名字
+  //参数2:cookie的值
+  //参数3：cookie的配置信息
+  res.cookie('username','cookievalue111');
 
-
-/*
-app.use(history(
-   {
-       htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
-   }
-));
-*/
+  res.send("设置cookie成功");
+});
 
 app.use(express.static('public'));
 
 
-/*
-// vue 学习
-app.get('/myvue.js',function(req,res){
-   res.sendFile(__dirname + "/" + 'myvue.js')
-})
-
-app.get('/vuesroute',function(req,res){
-   res.sendFile(__dirname + "/" + "vuesroute.html")
-})
-
-app.get('/zuoyongyuslot',function(req,res){
-   res.sendFile(__dirname + "/" + "zuoyongyuslot.html")
-})
-
-*/
-
-
 function login(req, res){
+
   var first_name = req.body.first_name,
       user_password = req.body.last_name;
 
@@ -57,15 +67,18 @@ function login(req, res){
    
   connection.connect();
 
-  res.write('<head><meta charset = "utf-8"></head>')
+
+
 
   connection.query('SELECT password from users where idusers = "' + first_name + '"', function(error, results, fields){
      if (error) throw error;
      console.log(results.length);
      if(results.length<=0){
-       res.end("用户名不存在");
+       res.end("Login Failed");
      }else{
-       loginCallback(results, res , user_password);
+       res.cookie('username',first_name,{ maxAge:10*1000,signed:true}); // 设置cookie
+       res.write('<head><meta charset = "utf-8"></head>')
+       loginCallback(results, res , first_name, user_password);
      }
   });
 
@@ -73,7 +86,7 @@ function login(req, res){
 
 }
 
-function loginCallback(results, res , user_password){
+function loginCallback(results, res , first_name, user_password){
 
    var backPassword = results[0].password;
 
@@ -83,7 +96,6 @@ function loginCallback(results, res , user_password){
    }else{
       res.write("Login Success");
       res.write("\n")
-
       var MongoClient = require('mongodb').MongoClient;
       var url = "mongodb://localhost:27017/";
       MongoClient.connect(url, function(err, db){

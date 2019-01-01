@@ -67,3 +67,9 @@ git 不支持中文解决办法
 Options->Text->Locale改为zh_CN，Character set改为UTF-8
 
 启动：项目目录下  nodemon server
+
+passport nodejs中一个模块，做登录验证的中间件,极其灵活和模块化,并且可与Express、Sails等Web框架无缝集成
+Egg 在它之上提供了 egg-passport 插件，把初始化、鉴权成功后的回调处理等通用逻辑封装掉，使得开发者仅需调用几个 API 即可方便的使用 Passport 。
+
+cookie-signature 包，可对cookies进行加密。example：https://github.com/tj/node-cookie-signature
+
