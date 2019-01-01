@@ -5,34 +5,11 @@ var bodyParser = require('body-parser');
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-/*
-app.get('/slot',function(req,res){
-   res.sendFile(__dirname + "/" + 'zuoyongyuslot.html')
-})
-
-app.get('/vue',function(req,res){
-   res.sendFile(__dirname + "/" + 'myvue.html')
-})
-app.get('/myvue.js',function(req,res){
-   res.sendFile(__dirname + "/" + 'myvue.js')
-})
-*/
-
-/*
-// 使用前方history路由，需要使用中间件，即可访问vue的项目
-const history = require('connect-history-api-fallback');
-//这句代码需要在express.static上面
-app.use(history());
-app.use(express.static('dist'));
-*/
-
-
-
 // 访问index.html,mysql登录，查询mongodb中JD中catalog记录条数
 app.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
-app.get('/login', function (req, res) {
+app.post('/login', urlencodedParser,function (req, res) {
    login(req, res);
 })
 
@@ -64,6 +41,37 @@ app.get('/zuoyongyuslot',function(req,res){
 })
 
 */
+
+
+function login(req, res){
+  var first_name = req.body.first_name,
+      user_password = req.body.last_name;
+
+  var mysql      = require('mysql');
+  var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : '12345',
+    database : 'jdspider'
+  });
+   
+  connection.connect();
+
+  res.write('<head><meta charset = "utf-8"></head>')
+
+  connection.query('SELECT password from users where idusers = "' + first_name + '"', function(error, results, fields){
+     if (error) throw error;
+     console.log(results.length);
+     if(results.length<=0){
+       res.end("用户名不存在");
+     }else{
+       loginCallback(results, res , user_password);
+     }
+  });
+
+  connection.end();
+
+}
 
 function loginCallback(results, res , user_password){
 
@@ -125,34 +133,6 @@ function dbCallback(items, res){
 
 }
 
-function login(req, res){
-   var first_name = req.body.first_name,
-       user_password = req.body.last_name;
-
-   var mysql      = require('mysql');
-   var connection = mysql.createConnection({
-     host     : 'localhost',
-     user     : 'root',
-     password : '12345',
-     database : 'jdspider'
-   });
-    
-   connection.connect();
-
-   res.write('<head><meta charset = "utf-8"></head>')
-
-   connection.query('SELECT password from users where idusers = "' + first_name + '"', function(error, results, fields){
-      if (error) throw error;
-      loginCallback(results, res , user_password);
-   });
-
-   connection.end();
-
-}
-
-
-
-app.post('/login', urlencodedParser, login);
 
 function inquire(req, res){
    console.log("inquire");
