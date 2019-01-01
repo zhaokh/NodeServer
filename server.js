@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');  // post请求参数获取，需要用到，目前没使用post请求
 var $ = require('./controllers/controller') 
 var cors = require('cors')
 
@@ -17,6 +17,14 @@ var allowCrossDomain = function(req, res, next) {
 };
 
 app.use(allowCrossDomain);
+app.disable('x-powered-by');
+
+app.use(express.static('dist'));
+Object.keys($).forEach(function(key){
+   Object.keys($[key]).forEach(function(api){
+      app.get('/api'+'/'+key+'/'+api,$[key][api]);
+   });
+});
 
 /*
 //allow custom header and CORS
@@ -43,13 +51,6 @@ app.use(cors({
 }));
 */
 
-app.use(express.static('dist'));
-
-Object.keys($).forEach(function(key){
-   Object.keys($[key]).forEach(function(api){
-      app.get('/api'+'/'+key+'/'+api,$[key][api]);
-   });
-});
  
 var server = app.listen(8081, function () {
  

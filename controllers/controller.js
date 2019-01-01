@@ -22,12 +22,12 @@ let CollectionsAPI = {};
 
 Object.keys(CollectionModels).forEach(function(key){
     let childrenAPI = {};
-    let chieldModel = CollectionModels[key];
+    let childModel = CollectionModels[key];
     childrenAPI.listCount = function (req,res,next) {
         res.setHeader("contentType", "text/html; charset=utf-8");
         // 查询数量
         var wherestr = {};
-        chieldModel.count(wherestr, function(err, doc){
+        childModel.count(wherestr, function(err, doc){
             if (err) {
                 console.log("Error:" + err);
             }
@@ -39,10 +39,11 @@ Object.keys(CollectionModels).forEach(function(key){
     };
 
     childrenAPI.findById = function (req,res,next) {
-        var param = req.query.Id; //解析get请求所携带的参数sort
-        console.log("findCommentsById, param = " + param);
-        var wherestr = {_id:param};
-        chieldModel.find(wherestr,function (err,doc) {
+        var param = req.query.keyword; //解析get请求所携带的参数sort
+        console.log("find " + key + " ById, param = " + param);
+        res.setHeader("contentType", "text/html; charset=utf-8");
+        var wherestr = {name:param};
+        childModel.find(wherestr,function (err,doc) {
             if(err){
                 res.end(JSON.stringify(err));
                 return

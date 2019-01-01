@@ -94,7 +94,6 @@ function countShops(conditions,callback) {
 }
 
 
-
 module.exports = {
     Categories:{
         find:findCategories,
