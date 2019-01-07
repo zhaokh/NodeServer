@@ -3,32 +3,36 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var sessionParser = require('express-session');
-var MongoStore = require('connect-mongostore')(sessionParser);
+//var MongoStore = require('connect-mongostore');
  
+
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.use(cookieParser('123456'));
+
+
 app.use(sessionParser({
   secret:'my app secret',// 用来对session id相关的cookie进行签名
   saveUninitialized:false,// 是否自动保存未初始化的会话，建议false
   resave:false,// 是否每次都重新保存会话，建议false
-  store: new MongoStore({   //创建新的mongodb数据库存储session
-      host: 'localhost',    //数据库的地址，本机的话就是127.0.0.1，也可以是网络主机
-      port: 27017,          //数据库的端口号
-      db: 'test-app'        //数据库的名称。
-  }),
+  //store: new MongoStore({   //创建新的mongodb数据库存储session
+  //    host: 'localhost',    //数据库的地址，本机的话就是127.0.0.1，也可以是网络主机
+  //    port: 27017,          //数据库的端口号
+  //    db: 'test-app'        //数据库的名称。
+  //}),
   name:'test',//cookie的name，默认值是：connect.sid
   cookie:{
       maxAge:10*1000
   }
 }));
 
+
 // 访问index.html,mysql登录，查询mongodb中JD中catalog记录条数
 app.get('/', function (req, res) {  
-   console.log("index页面get请求request的cookies：");
-   console.log(req.cookies);
+
    res.sendFile( __dirname + "/" + "index.html" );
+
 })
 app.post('/login', urlencodedParser,function (req, res) {
   console.log("index页面登录请求post的request的cookies：");
@@ -37,7 +41,7 @@ app.post('/login', urlencodedParser,function (req, res) {
   console.log(req.session.id);
   res.cookie('sessionid',req.sessionID); 
   req.session.save();
-   login(req, res);
+  login(req, res);
 })
 
 app.get("/set",function(req,res){
@@ -68,17 +72,31 @@ function login(req, res){
   connection.connect();
 
 
-
-
   connection.query('SELECT password from users where idusers = "' + first_name + '"', function(error, results, fields){
      if (error) throw error;
      console.log(results.length);
      if(results.length<=0){
        res.end("Login Failed");
      }else{
-       res.cookie('username',first_name,{ maxAge:10*1000,signed:true}); // 设置cookie
-       res.write('<head><meta charset = "utf-8"></head>')
-       loginCallback(results, res , first_name, user_password);
+      
+      res.sendFile( __dirname + "/dist/" + "index.html" );
+      
+      console.log(__dirname + "/dist/" + "index.html");
+      /*
+      res.cookie('username',first_name,{ maxAge:10*1000,signed:true}); // 设置cookie
+      res.write('<head><meta charset = "utf-8"></head>')
+      console.log("index页面get请求request的cookies：");
+      if(req.session.isVisit) {
+         req.session.isVisit++;
+         res.write('<p>第 ' + req.session.isVisit + '次来此页面</p>');
+      } else {
+         req.session.isVisit = 1;
+         res.write("欢迎第一次来这里");
+         console.log(req.session);
+      }
+      loginCallback(results, res , first_name, user_password);
+      */
+
      }
   });
 
@@ -90,19 +108,15 @@ function loginCallback(results, res , first_name, user_password){
 
    var backPassword = results[0].password;
 
-   if(user_password != backPassword){
-      res.write("Login Faild" + "\n")
-      res.end();
-   }else{
-      res.write("Login Success");
-      res.write("\n")
-      var MongoClient = require('mongodb').MongoClient;
-      var url = "mongodb://localhost:27017/";
-      MongoClient.connect(url, function(err, db){
-         if (err) throw err;
-         mongoConnCallback(db, res);
-      });
-   }
+   res.write("Login Success");
+   res.write("\n")
+   var MongoClient = require('mongodb').MongoClient;
+   var url = "mongodb://localhost:27017/";
+   MongoClient.connect(url, function(err, db){
+      if (err) throw err;
+      mongoConnCallback(db, res);
+   });
+
 }
 
 function mongoConnCallback(db, res){        

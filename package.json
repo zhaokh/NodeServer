@@ -21,9 +21,11 @@
     "multer": "^1.4.1"
   },
   "devDependencies": {
+    "connect": "^3.6.6",
     "connect-mongostore": "^0.1.4",
     "cookie-parser": "^1.4.3",
     "express-session": "^1.15.6",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "session-mongoose": "^0.5.2"
   }
 }
