@@ -11,6 +11,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.use(cookieParser('123456'));
 
+app.use(express.static('dist'));
 
 app.use(sessionParser({
   secret:'my app secret',// 用来对session id相关的cookie进行签名
@@ -31,7 +32,7 @@ app.use(sessionParser({
 // 访问index.html,mysql登录，查询mongodb中JD中catalog记录条数
 app.get('/', function (req, res) {  
 
-   res.sendFile( __dirname + "/" + "index.html" );
+   res.sendFile( __dirname + "/" + "login.html" );
 
 })
 app.post('/login', urlencodedParser,function (req, res) {
@@ -52,8 +53,6 @@ app.get("/set",function(req,res){
 
   res.send("设置cookie成功");
 });
-
-app.use(express.static('public'));
 
 
 function login(req, res){
@@ -79,9 +78,9 @@ function login(req, res){
        res.end("Login Failed");
      }else{
       
-      res.sendFile( __dirname + "/dist/" + "index.html" );
+      res.sendFile( __dirname + "/" + "index.html" );
       
-      console.log(__dirname + "/dist/" + "index.html");
+      console.log(__dirname + "/" + "index.html");
       /*
       res.cookie('username',first_name,{ maxAge:10*1000,signed:true}); // 设置cookie
       res.write('<head><meta charset = "utf-8"></head>')
